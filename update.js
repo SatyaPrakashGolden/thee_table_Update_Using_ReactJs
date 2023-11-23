@@ -607,3 +607,43 @@ console.log(updateData);
   );
 };
 export default UserProfile;
+--------------------------------------------------
+//http://localhost:4000/course/update
+router.put('/update', async (req, res) => {
+    
+    try {
+        const { name, email, mobile, usertype } = req.body.users[0];
+
+        const { city, hometown, college, university, passing_year, branch, linkedinid, githubid,
+            currentcompany, yearsOfExperience, currentDesignation, noticePeriod, currentSalary, skills, dob, workLocation,
+            typePartFull, typeFullIntern, jobType, uploadCV } = req.body.user_details[0];
+
+        const { courseid, referredby, regstatus, totalfee, paidfee, duefee,
+            certificateid, grade, certiDeliverStatus, completionStatus } = req.body.reg_users_courses[0];
+
+        const response = await db.promise()
+            .query(`update users set name='${name}',email='${email}',mobile='${mobile}',usertype='${usertype}' 
+        where userid=${req.body.users[0].userid}`);
+
+        const response1 = await db.promise()
+            .query(`update user_details set city='${city}',hometown='${hometown}',college='${college}',university='${university}',
+        passing_year='${passing_year}',branch='${branch}',linkedinid='${linkedinid}',githubid='${githubid}',
+        currentcompany='${currentcompany}',yearsOfExperience='${yearsOfExperience}',currentDesignation='${currentDesignation}',
+        noticePeriod='${noticePeriod}',currentSalary='${currentSalary}',skills='${skills}',dob='${dob}',
+        workLocation='${workLocation}',typePartFull='${typePartFull}',typeFullIntern='${typeFullIntern}',jobType='${jobType}',
+        uploadCV='${uploadCV}' where userid= ${req.body.user_details[0].userid}`);
+
+        const response2 = await db.promise()
+            .query(`update reg_users_courses set courseid='${courseid}',referredby='${referredby}',regstatus='${regstatus}',
+        totalfee='${totalfee}',paidfee='${paidfee}',duefee='${duefee}',certificateid='${certificateid}',grade='${grade}',
+        certiDeliverStatus='${certiDeliverStatus}',completionStatus='${completionStatus}'
+        where userid= ${req.body.reg_users_courses[0].userid} `);
+
+        res.status(201).json({ message: "Table Updated." });
+
+    }
+    catch (err) {
+        res.status(400).json({ message: err });
+        console.log(err)
+    }
+});
